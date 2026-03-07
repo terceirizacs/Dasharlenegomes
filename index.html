@@ -144,9 +144,25 @@ tbody td{padding:8px 9px;white-space:nowrap;}
 
 .ft{width:100%;border-collapse:collapse;font-size:12px;}
 .ft th{background:var(--bg);font-weight:600;text-transform:uppercase;font-size:10px;padding:9px 12px;text-align:left;color:var(--accent);letter-spacing:.5px;}
-.ft td{padding:9px 12px;border-bottom:1px solid var(--border);}
+.ft td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text);}
+.ft tbody tr:nth-child(even){background:var(--bg);}
+.ft tbody tr:hover{background:rgba(108,92,231,.05);}
 
-@media(max-width:900px){.crow{grid-template-columns:1fr;}.kg{grid-template-columns:repeat(2,1fr);}.ctn,.fpanel,.tabs,.hdr{padding-left:12px;padding-right:12px;}.login-card{width:90%;padding:32px 24px 28px;}}
+@media(max-width:900px){
+  .crow{grid-template-columns:1fr;}
+  .kg{grid-template-columns:repeat(2,1fr);}
+  .ctn,.fpanel,.tabs,.hdr{padding-left:12px;padding-right:12px;}
+  .login-card{width:90%;padding:32px 24px 28px;}
+  .cc canvas{max-height:none!important;min-height:350px;}
+  .tw{max-height:none;}
+  table{font-size:10px;}
+  .ft td,.ft th{padding:7px 8px;font-size:10px;}
+  .ft th{font-size:8px;}
+}
+@media(max-width:600px){
+  .kg{grid-template-columns:1fr;}
+  .cc canvas{min-height:400px;}
+}
 </style>
 </head>
 <body>
@@ -280,8 +296,8 @@ tbody td{padding:8px 9px;white-space:nowrap;}
     <div class="crow"><div class="cc full"><h3>Dias para Expirar (alunos ativos)</h3><canvas id="cExp" style="max-height:200px"></canvas></div></div>
     <div class="stitle">&#11088; CSAT — Satisfação por Disciplina</div>
     <div class="crow">
-      <div class="cc"><h3>CSAT Geral por Disciplina (de 5)</h3><canvas id="cCs"></canvas></div>
-      <div class="cc"><h3>Videoaulas vs Material Escrito</h3><canvas id="cCsD"></canvas></div>
+      <div class="cc"><h3>CSAT Geral por Disciplina (de 5)</h3><canvas id="cCs" style="min-height:360px"></canvas></div>
+      <div class="cc"><h3>Videoaulas vs Material Escrito</h3><canvas id="cCsD" style="min-height:360px"></canvas></div>
     </div>
   </div>
 
@@ -349,9 +365,7 @@ async function carregarDados() {
       });
       MONTHLY = Object.keys(mm).sort().map(k => ({ mes: k, provas: mm[k] }));
     }
-    console.log('MONTHLY:', JSON.stringify(MONTHLY));
-    console.log('DATA[0]:', DATA.length>0?JSON.stringify(DATA[0]):'vazio');
-    if(json.debug) console.log('DEBUG API:', JSON.stringify(json.debug));
+    // Debug removido
 
     // Atualizar timestamp de atualização
     if (json.atualizado) {
@@ -541,15 +555,16 @@ function rFm(){
   document.getElementById('fmB').innerHTML=f.map((s,i)=>{const n=Object.values(s.notas);const m=n.length?(n.reduce((a,b)=>a+b,0)/n.length).toFixed(1):'-';return`<tr><td style="font-weight:600;color:var(--accent)">${i+1}</td><td style="font-weight:500">${s.aluno}</td><td>Turma ${s.turma}</td><td><span class="badge ${bc(s.status)}">${s.status}</span></td><td style="font-weight:700;color:var(--green)">${m}</td></tr>`;}).join('');
 }
 function rTb(){
-  const cols=[{k:'aluno',l:'Aluno'},{k:'turma',l:'Turma'},{k:'status',l:'Status'},{k:'qtd_provas',l:'Provas'},{k:'disciplinas',l:'Disciplinas'},{k:'faixa_acesso',l:'Acesso'},{k:'dias_sem_acessar',l:'Dias s/ Acesso'},{k:'respondeu',l:'Respondeu'}];
+  const cols=[{k:'aluno',l:'Aluno'},{k:'turma',l:'Turma'},{k:'status',l:'Status'},{k:'qtd_provas',l:'Provas'},{k:'disciplinas',l:'Disciplinas'},{k:'dias_com_acesso',l:'Dias c/ Acesso'},{k:'faixa_acesso',l:'Acesso'},{k:'dias_sem_acessar',l:'Dias s/ Acesso'},{k:'respondeu',l:'Respondeu'}];
   document.getElementById('tH').innerHTML=cols.map(c=>{const s=sCol===c.k;return`<th class="${s?'sd':''}" onclick="doS('${c.k}')">${c.l}<span class="si">${s?(sAsc?'▲':'▼'):'⇅'}</span></th>`;}).join('');
   let rows=[...filtered];
-  if(sCol){rows.sort((a,b)=>{let va=sCol==='disciplinas'?Object.keys(a.notas).length:a[sCol],vb=sCol==='disciplinas'?Object.keys(b.notas).length:b[sCol];if(va==null)va=sAsc?Infinity:-Infinity;if(vb==null)vb=sAsc?Infinity:-Infinity;if(typeof va==='string')return sAsc?va.localeCompare(vb):vb.localeCompare(va);return sAsc?va-vb:vb-va;});}
+  if(sCol){rows.sort((a,b)=>{let va=sCol==='disciplinas'?Object.keys(a.notas).length:sCol==='dias_com_acesso'?(a.data_compra?Math.floor((Date.now()-new Date(a.data_compra).getTime())/(1000*60*60*24)):-1):(a[sCol]),vb=sCol==='disciplinas'?Object.keys(b.notas).length:sCol==='dias_com_acesso'?(b.data_compra?Math.floor((Date.now()-new Date(b.data_compra).getTime())/(1000*60*60*24)):-1):(b[sCol]);if(va==null)va=sAsc?Infinity:-Infinity;if(vb==null)vb=sAsc?Infinity:-Infinity;if(typeof va==='string')return sAsc?va.localeCompare(vb):vb.localeCompare(va);return sAsc?va-vb:vb-va;});}
   document.getElementById('tB').innerHTML=rows.map(s=>{
     const pct=(s.qtd_provas/12)*100;
     const dots=DN.map((d,i)=>{const n=s.notas[d];const ok=n!==undefined;return`<div class="d1 ${ok?'ok':'no'}" title="${DS[i]}: ${ok?n:'—'}">${ok?'✓':(i+1)}</div>`;}).join('');
     const ac=s.faixa_acesso==='0-14d'?'b-at':s.faixa_acesso==='60d'?'b-ca':'b-pr';
-    return`<tr><td style="font-weight:500;max-width:190px;overflow:hidden;text-overflow:ellipsis" title="${s.aluno}">${s.aluno}</td><td>${s.turma||'-'}</td><td><span class="badge ${bc(s.status)}">${s.status}</span></td><td><div class="pb"><span class="pbx" style="color:${pc(s.qtd_provas)}">${s.qtd_provas}/12</span><div class="pbt"><div class="pbf" style="width:${pct}%;background:${pc(s.qtd_provas)}"></div></div></div></td><td><div class="dd">${dots}</div></td><td><span class="badge ${ac}">${s.faixa_acesso||'-'}</span></td><td>${s.dias_sem_acessar!=null?s.dias_sem_acessar+'d':'-'}</td><td style="color:${s.respondeu==='Sim'?'var(--green)':'var(--text3)'}">${s.respondeu}</td></tr>`;
+    const diasAcesso=s.data_compra?Math.max(0,Math.floor((Date.now()-new Date(s.data_compra).getTime())/(1000*60*60*24))):'-';
+    return`<tr><td style="font-weight:500;max-width:190px;overflow:hidden;text-overflow:ellipsis" title="${s.aluno}">${s.aluno}</td><td>${s.turma||'-'}</td><td><span class="badge ${bc(s.status)}">${s.status}</span></td><td><div class="pb"><span class="pbx" style="color:${pc(s.qtd_provas)}">${s.qtd_provas}/12</span><div class="pbt"><div class="pbf" style="width:${pct}%;background:${pc(s.qtd_provas)}"></div></div></div></td><td><div class="dd">${dots}</div></td><td style="text-align:center;font-weight:600;color:var(--accent)">${diasAcesso}${diasAcesso!=='-'?'d':''}</td><td><span class="badge ${ac}">${s.faixa_acesso||'-'}</span></td><td>${s.dias_sem_acessar!=null?s.dias_sem_acessar+'d':'-'}</td><td style="color:${s.respondeu==='Sim'?'var(--green)':'var(--text3)'}">${s.respondeu}</td></tr>`;
   }).join('');
   document.getElementById('tCnt').textContent=rows.length+' aluno(s)';
 }
@@ -632,7 +647,7 @@ function rCh(){
 
   if(ctx=el('cCsD')){
     const csL2=CSAT.map(c=>{const w=c.disciplina.split(' ');return w.slice(0,3).join(' ').substring(0,25);});
-    charts.csD=new Chart(ctx,{type:'bar',data:{labels:csL2,datasets:[{label:'Videoaulas',data:CSAT.map(c=>c.media_video),backgroundColor:'rgba(9,132,227,.55)',borderColor:'#0984E3',borderWidth:1,borderRadius:4},{label:'Material',data:CSAT.map(c=>c.media_material),backgroundColor:'rgba(0,184,148,.55)',borderColor:'#00B894',borderWidth:1,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{position:'top',labels:{boxWidth:10,font:{size:10}}},tooltip:{callbacks:{afterLabel:function(ctx){return CSAT[ctx.dataIndex].qtd+' avaliações';}}}},scales:{x:{beginAtZero:true,max:5,grid:{color:gC}},y:{grid:{display:false},ticks:{font:{size:9},autoSkip:false}}}}});
+    charts.csD=new Chart(ctx,{type:'bar',data:{labels:csL2,datasets:[{label:'Videoaulas',data:CSAT.map(c=>c.media_video),backgroundColor:'rgba(9,132,227,.55)',borderColor:'#0984E3',borderWidth:1,borderRadius:4},{label:'Material',data:CSAT.map(c=>c.media_material),backgroundColor:'rgba(0,184,148,.55)',borderColor:'#00B894',borderWidth:1,borderRadius:4}]},plugins:[barP],options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{position:'top',labels:{boxWidth:10,font:{size:10}}},tooltip:{callbacks:{afterLabel:function(ctx){return CSAT[ctx.dataIndex].qtd+' avaliações';}}}},scales:{x:{beginAtZero:true,max:5,grid:{color:gC}},y:{grid:{display:false},ticks:{font:{size:9},autoSkip:false}}}}});
   }
 }
 
