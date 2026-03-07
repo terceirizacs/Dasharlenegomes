@@ -333,6 +333,18 @@ async function carregarDados() {
     DN = json.disc_names || [];
     CSAT = json.csat || [];
 
+    // Fallback: se MONTHLY vazio, calcular a partir dos dados dos alunos
+    if (MONTHLY.length === 0 && DATA.length > 0) {
+      const mm = {};
+      DATA.forEach(s => {
+        if (s.data_compra && s.qtd_provas > 0) {
+          const key = s.data_compra.substring(0, 7); // "YYYY-MM"
+          mm[key] = (mm[key] || 0) + s.qtd_provas;
+        }
+      });
+      MONTHLY = Object.keys(mm).sort().map(k => ({ mes: k, provas: mm[k] }));
+    }
+
     // Atualizar timestamp de atualização
     if (json.atualizado) {
       const sub = document.querySelector('.loading-sub');
@@ -550,8 +562,13 @@ function rCh(){
   let ctx;
 
   if(ctx=el('cMon')){
-    const mL=MONTHLY.map(m=>{const[y,mo]=m.mes.split('-');const nm=['','Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];return nm[parseInt(mo)]+'/'+y.slice(2);});
-    charts.mon=new Chart(ctx,{type:'bar',data:{labels:mL,datasets:[{data:MONTHLY.map(m=>m.provas),backgroundColor:'rgba(108,92,231,.55)',borderColor:'#6C5CE7',borderWidth:1,borderRadius:6}]},plugins:[barP],options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:gC}},x:{grid:{display:false}}}}});
+    if(MONTHLY.length>0){
+      const mL=MONTHLY.map(m=>{const[y,mo]=m.mes.split('-');const nm=['','Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];return nm[parseInt(mo)]+'/'+y.slice(2);});
+      charts.mon=new Chart(ctx,{type:'bar',data:{labels:mL,datasets:[{data:MONTHLY.map(m=>m.provas),backgroundColor:'rgba(108,92,231,.55)',borderColor:'#6C5CE7',borderWidth:1,borderRadius:6}]},plugins:[barP],options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:{display:true,text:'Provas por Mês',font:{size:13,weight:'600'},padding:{bottom:12}}},scales:{y:{beginAtZero:true,grid:{color:gC}},x:{grid:{display:false}}}}});
+    } else {
+      const cEl=ctx.parentElement||ctx;
+      cEl.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:160px;color:var(--muted);font-size:13px;">Sem dados de provas por mês disponíveis</div>';
+    }
   }
 
   if(ctx=el('cSt')){
