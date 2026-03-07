@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard CS — Arlene Gomes MBA</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 12 A38 38 0 0 1 82 32' stroke='%231F2937' stroke-width='7.5' fill='none' stroke-linecap='round'/%3E%3Cpath d='M82 32 L88 22 L78 25' stroke='%231F2937' stroke-width='7.5' fill='none' stroke-linejoin='round' stroke-linecap='round'/%3E%3Cpath d='M82 68 A38 38 0 0 1 50 88' stroke='%231F2937' stroke-width='7.5' fill='none' stroke-linecap='round'/%3E%3Cpath d='M50 88 L44 96 L40 86' stroke='%231F2937' stroke-width='7.5' fill='none' stroke-linejoin='round' stroke-linecap='round'/%3E%3Cpath d='M18 68 A38 38 0 0 1 18 32' stroke='%231F2937' stroke-width='7.5' fill='none' stroke-linecap='round'/%3E%3Cpath d='M18 32 L12 40 L24 40' stroke='%231F2937' stroke-width='7.5' fill='none' stroke-linejoin='round' stroke-linecap='round'/%3E%3Ctext x='50' y='58' text-anchor='middle' font-family='Inter,Arial,sans-serif' font-weight='900' font-size='26' fill='%231F2937'%3ETCS%3C/text%3E%3C/svg%3E">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
@@ -64,7 +65,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .tab.on{color:#fff;background:var(--accent);font-weight:600;border-bottom-color:var(--accent);}
 
 /* FILTERS */
-.fpanel{background:var(--card);margin:16px auto 0;border-radius:12px;padding:18px 22px;box-shadow:var(--shadow);border:1px solid var(--border);max-width:1440px;width:calc(100% - 64px);}
+.fpanel{background:var(--card);margin:0;border-radius:0;padding:18px 32px;box-shadow:var(--shadow);border-bottom:1px solid var(--border);}
 .ftop{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
 .ftop h3{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text);}
 .fbtn{padding:6px 16px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--card);color:var(--text2);font-family:'Inter';transition:.2s;margin-left:6px;}
@@ -82,10 +83,15 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .fopt input{accent-color:var(--accent);width:14px;height:14px;cursor:pointer;}
 .fopt.all{border-bottom:1px solid var(--border);color:var(--accent);font-weight:600;}
 .fg input[type="date"]{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px 11px;border-radius:8px;font-size:12px;font-family:'Inter';width:100%;outline:none;}
+.fchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;padding-top:8px;border-top:1px solid var(--border);}
+.fchip{display:inline-flex;align-items:center;gap:5px;background:rgba(108,92,231,.1);color:var(--accent);padding:4px 12px;border-radius:16px;font-size:11px;font-weight:600;}
+.fchip .fc-x{cursor:pointer;font-size:13px;opacity:.6;transition:opacity .15s;line-height:1;}
+.fchip .fc-x:hover{opacity:1;}
+.fchips:empty{display:none;margin:0;padding:0;border:0;}
 .finfo{font-size:11px;color:var(--text3);margin-top:10px;padding-top:8px;border-top:1px solid var(--border);}
 
 /* LAYOUT */
-.ctn{padding:18px 0 40px;max-width:1440px;margin:0 auto;width:calc(100% - 64px);}
+.ctn{padding:18px 32px 40px;}
 .tc{display:none;}.tc.on{display:block;}
 .kg{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:18px;}
 .kc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;box-shadow:var(--shadow);transition:.25s;}
@@ -139,7 +145,7 @@ tbody td{padding:8px 9px;white-space:nowrap;}
 .ft th{background:var(--bg);font-weight:600;text-transform:uppercase;font-size:10px;padding:9px 12px;text-align:left;color:var(--accent);letter-spacing:.5px;}
 .ft td{padding:9px 12px;border-bottom:1px solid var(--border);}
 
-@media(max-width:900px){.crow{grid-template-columns:1fr;}.kg{grid-template-columns:repeat(2,1fr);}.ctn,.fpanel{width:calc(100% - 24px);}.tabs,.hdr{padding-left:12px;padding-right:12px;}.login-card{width:90%;padding:32px 24px 28px;}}
+@media(max-width:900px){.crow{grid-template-columns:1fr;}.kg{grid-template-columns:repeat(2,1fr);}.ctn,.fpanel,.tabs,.hdr{padding-left:12px;padding-right:12px;}.login-card{width:90%;padding:32px 24px 28px;}}
 </style>
 </head>
 <body>
@@ -148,14 +154,14 @@ tbody td{padding:8px 9px;white-space:nowrap;}
 <div class="login-screen" id="loginScreen">
   <div class="login-card">
     <div class="login-logo">
-      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-        <path d="M100 28 A72 72 0 0 1 162 65" stroke="#1F2937" stroke-width="14" fill="none" stroke-linecap="round"/>
-        <polygon points="170,58 155,75 149,55" fill="#1F2937"/>
-        <path d="M162 135 A72 72 0 0 1 100 172" stroke="#1F2937" stroke-width="14" fill="none" stroke-linecap="round"/>
-        <polygon points="93,178 108,178 100,162" fill="#1F2937"/>
-        <path d="M38 135 A72 72 0 0 0 38 65" stroke="#1F2937" stroke-width="14" fill="none" stroke-linecap="round"/>
-        <polygon points="30,58 45,55 51,75" fill="#1F2937"/>
-        <text x="100" y="112" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-weight="900" font-size="48" fill="#1F2937">TCS</text>
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" >
+        <path d="M50 12 A38 38 0 0 1 82 32" stroke="#1F2937" stroke-width="7.5" fill="none" stroke-linecap="round"/>
+        <path d="M82 32 L88 22 L78 25" stroke="#1F2937" stroke-width="7.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M82 68 A38 38 0 0 1 50 88" stroke="#1F2937" stroke-width="7.5" fill="none" stroke-linecap="round"/>
+        <path d="M50 88 L44 96 L40 86" stroke="#1F2937" stroke-width="7.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M18 68 A38 38 0 0 1 18 32" stroke="#1F2937" stroke-width="7.5" fill="none" stroke-linecap="round"/>
+        <path d="M18 32 L12 40 L24 40" stroke="#1F2937" stroke-width="7.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+        <text x="50" y="58" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-weight="900" font-size="26" fill="#1F2937">TCS</text>
       </svg>
     </div>
     <div class="login-title">Dashboard CS</div>
@@ -181,14 +187,14 @@ tbody td{padding:8px 9px;white-space:nowrap;}
 <div class="hdr">
   <div class="hdr-l">
     <div class="logo-box">
-      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="tcs-logo">
-        <path d="M100 28 A72 72 0 0 1 162 65" stroke="#1F2937" stroke-width="14" fill="none" stroke-linecap="round"/>
-        <polygon points="170,58 155,75 149,55" fill="#1F2937"/>
-        <path d="M162 135 A72 72 0 0 1 100 172" stroke="#1F2937" stroke-width="14" fill="none" stroke-linecap="round"/>
-        <polygon points="93,178 108,178 100,162" fill="#1F2937"/>
-        <path d="M38 135 A72 72 0 0 0 38 65" stroke="#1F2937" stroke-width="14" fill="none" stroke-linecap="round"/>
-        <polygon points="30,58 45,55 51,75" fill="#1F2937"/>
-        <text x="100" y="112" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-weight="900" font-size="48" fill="#1F2937">TCS</text>
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="tcs-logo">
+        <path d="M50 12 A38 38 0 0 1 82 32" stroke="#1F2937" stroke-width="7.5" fill="none" stroke-linecap="round"/>
+        <path d="M82 32 L88 22 L78 25" stroke="#1F2937" stroke-width="7.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M82 68 A38 38 0 0 1 50 88" stroke="#1F2937" stroke-width="7.5" fill="none" stroke-linecap="round"/>
+        <path d="M50 88 L44 96 L40 86" stroke="#1F2937" stroke-width="7.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M18 68 A38 38 0 0 1 18 32" stroke="#1F2937" stroke-width="7.5" fill="none" stroke-linecap="round"/>
+        <path d="M18 32 L12 40 L24 40" stroke="#1F2937" stroke-width="7.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+        <text x="50" y="58" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-weight="900" font-size="26" fill="#1F2937">TCS</text>
       </svg>
     </div>
     <div class="hdr-info">
@@ -267,6 +273,7 @@ tbody td{padding:8px 9px;white-space:nowrap;}
     </div>
   </div>
   <div class="finfo" id="fInfo">Nenhum filtro ativo — mostrando todos os dados</div>
+  <div class="fchips" id="fChips"></div>
 </div>
 
 <div class="ctn">
@@ -428,7 +435,7 @@ let filtered = [], sCol = null, sAsc = true, charts = {};
 function setTheme(t){document.body.classList.toggle('dark',t==='dark');document.getElementById('bL').classList.toggle('on',t==='light');document.getElementById('bD').classList.toggle('on',t==='dark');
 document.querySelectorAll('.tcs-logo text').forEach(el=>el.setAttribute('fill',t==='dark'?'#E2E8F0':'#1F2937'));
 document.querySelectorAll('.tcs-logo path').forEach(p=>p.setAttribute('stroke',t==='dark'?'#E2E8F0':'#1F2937'));
-document.querySelectorAll('.tcs-logo polygon').forEach(p=>p.setAttribute('fill',t==='dark'?'#E2E8F0':'#1F2937'));
+/* no polygons in new logo */
 renderAll();}
 function updClk(){const n=new Date();document.getElementById('clk').textContent=n.toLocaleDateString('pt-BR')+' '+n.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});}
 updClk();setInterval(updClk,30000);
@@ -461,8 +468,26 @@ function applyF(){
   const nTu=document.querySelectorAll('#dTurma .fopt:not(.all) input').length;
   const allSt=st.length===nSt,allTu=tu.length===nTu,allAc=ac.length===4,allPr=pr.length===4;
   const cnt=(allSt?0:1)+(allTu?0:1)+(allAc?0:1)+(allPr?0:1)+(df?1:0)+(dt?1:0);
-  document.getElementById('fInfo').textContent=cnt?cnt+' filtro(s) ativo(s)':'Nenhum filtro ativo — mostrando todos os dados';
+  document.getElementById('fInfo').textContent=cnt?cnt+' filtro(s) ativo(s)':'Nenhum filtro ativo \u2014 mostrando todos os dados';
+  // Render filter chips
+  let chips=[];
+  if(!allSt) st.forEach(v=>chips.push({g:'dStatus',v:v,l:v}));
+  if(!allTu) tu.forEach(v=>chips.push({g:'dTurma',v:v,l:'Turma '+v}));
+  if(!allAc) ac.forEach(v=>chips.push({g:'dAcesso',v:v,l:v==='60d'?'+60 dias':v.replace('d',' dias')}));
+  if(!allPr) pr.forEach(v=>chips.push({g:'dProvas',v:v,l:v==='0'?'0 provas':v+' provas'}));
+  if(df) chips.push({g:'dateFrom',v:df,l:'De: '+df.split('-').reverse().join('/')});
+  if(dt) chips.push({g:'dateTo',v:dt,l:'Até: '+dt.split('-').reverse().join('/')});
+  document.getElementById('fChips').innerHTML=chips.map(c=>
+    '<span class="fchip">'+c.l+' <span class="fc-x" onclick="removeChip(\''+c.g+'\',\''+c.v+'\')">\u00d7</span></span>'
+  ).join('');
   renderAll();
+}
+function removeChip(g,v){
+  if(g==='dateFrom'){document.getElementById('fDateFrom').value='';applyF();return;}
+  if(g==='dateTo'){document.getElementById('fDateTo').value='';applyF();return;}
+  const cb=document.querySelector('#'+g+' .fopt:not(.all) input[value="'+v+'"]');
+  if(cb){cb.checked=false;const drop=document.getElementById(g);const allCb=drop.querySelector('.all input');const boxes=drop.querySelectorAll('.fopt:not(.all) input');allCb.checked=[...boxes].every(b=>b.checked);updSelLabel(g);}
+  applyF();
 }
 function clearF(){
   document.querySelectorAll('.fdrop input[type=checkbox]').forEach(i=>i.checked=true);
@@ -492,7 +517,7 @@ function rKV(){
   document.getElementById('kV').innerHTML=kpis.map(k=>`<div class="kc"><div class="kline" style="background:${k.c}"></div><div class="klbl">${k.l}</div><div class="kval" style="color:${k.c}">${k.v}</div><div class="ksub">${k.s}</div></div>`).join('');
 }
 function rKE(){
-  const mE=filtered.filter(s=>s.msg_enviada).length,re=filtered.filter(s=>s.respondeu==='Sim').length,tx=mE>0?((re/mE)*100).toFixed(0):'0';
+  const mE=filtered.filter(s=>s.msg_enviada||s.respondeu==='Sim').length,re=filtered.filter(s=>s.respondeu==='Sim').length,tx=mE>0?((re/mE)*100).toFixed(0):'0';
   const rec=filtered.filter(s=>s.faixa_acesso==='0-14d').length,ina=filtered.filter(s=>s.faixa_acesso==='60d').length,tot=filtered.length;
   const kpis=[
     {l:'Msgs Enviadas (únicos)',v:mE,c:'var(--accent)',s:'clientes únicos'},
