@@ -337,13 +337,21 @@ async function carregarDados() {
     if (MONTHLY.length === 0 && DATA.length > 0) {
       const mm = {};
       DATA.forEach(s => {
-        if (s.data_compra && s.qtd_provas > 0) {
-          const key = s.data_compra.substring(0, 7); // "YYYY-MM"
-          mm[key] = (mm[key] || 0) + s.qtd_provas;
+        const dt = s.data_compra || s.ultimo_acesso || s.data_expira;
+        if (!dt) return;
+        let key = '';
+        if (/^\d{4}-\d{2}/.test(dt)) key = dt.substring(0, 7);
+        else if (/\d{2}\/\d{2}\/\d{4}/.test(dt)) { const p=dt.match(/(\d{2})\/(\d{2})\/(\d{4})/); if(p) key=p[3]+'-'+p[2]; }
+        if (key) {
+          const qp = s.qtd_provas || 0;
+          if (qp > 0) mm[key] = (mm[key] || 0) + qp;
         }
       });
       MONTHLY = Object.keys(mm).sort().map(k => ({ mes: k, provas: mm[k] }));
     }
+    console.log('MONTHLY:', JSON.stringify(MONTHLY));
+    console.log('DATA[0]:', DATA.length>0?JSON.stringify(DATA[0]):'vazio');
+    if(json.debug) console.log('DEBUG API:', JSON.stringify(json.debug));
 
     // Atualizar timestamp de atualização
     if (json.atualizado) {
