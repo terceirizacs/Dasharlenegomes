@@ -493,11 +493,14 @@ function rKV(){
   const allN=act.flatMap(s=>Object.values(s.notas));
   const mN=allN.length?(allN.reduce((a,b)=>a+b,0)/allN.length).toFixed(1):'-';
   const sP=act.filter(s=>s.qtd_provas===0).length;
+  const canc=filtered.filter(s=>s.status==='Cancelada').length;
+  const txCanc=tot>0?((canc/tot)*100).toFixed(1):'0';
   const kpis=[
     {l:'Total Alunos Ativos',v:tA,c:'var(--accent)',s:tot+' alunos no total'},
     {l:'Média Provas / Aluno',v:mP,c:'var(--green)',s:'somente ativos'},
     {l:'Formandos (12 provas)',v:fm,c:'var(--blue)',s:pF+'% dos ativos'},
     {l:'Sem Nenhuma Prova',v:sP,c:'var(--red)',s:tA>0?((sP/tA)*100).toFixed(0)+'% dos ativos':''},
+    {l:'Taxa de Cancelamento',v:txCanc+' %',c:'var(--red)',s:canc+' de '+tot+' alunos'},
   ];
   document.getElementById('kV').innerHTML=kpis.map(k=>`<div class="kc"><div class="kline" style="background:${k.c}"></div><div class="klbl">${k.l}</div><div class="kval" style="color:${k.c}">${k.v}</div><div class="ksub">${k.s}</div></div>`).join('');
 }
