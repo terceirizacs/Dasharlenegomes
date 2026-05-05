@@ -686,7 +686,7 @@ function clearF(){
   applyF();
 }
 
-function atv(a){return a.filter(s=>!['Cancelada','Indeferida'].includes(s.status));}
+function atv(a){return a.filter(s=>!['Cancelada','Indeferida'].includes(s.status) && (s.dias_faltam===null||s.dias_faltam===undefined||s.dias_faltam>=0));}
 function bc(s){return s==='Ativa'?'b-at':s==='Pré-confirmada'?'b-pr':s==='Cancelada'?'b-ca':s==='Concluída'?'b-co':'b-in';}
 function pc(n){return n===0?'#D63031':n<=3?'#E17055':n<=8?'#0984E3':'#00B894';}
 
@@ -701,7 +701,7 @@ function rKV(){
   const canc=filtered.filter(s=>s.status==='Cancelada').length;
   const txCanc=tot>0?((canc/tot)*100).toFixed(1):'0';
   const kpis=[
-    {l:'Total Alunos Ativos',v:tA,c:'var(--accent)',s:tot+' alunos no total'},
+    {l:'Total Alunos Ativos',v:tA,c:'var(--accent)',s:tot+' total · exclui cancelados e expirados'},
     {l:'Média Provas / Aluno',v:mP,c:'var(--green)',s:'somente ativos'},
     {l:'Formandos (12 provas)',v:fm,c:'var(--sky)',s:pF+'% dos ativos'},
     {l:'Sem Nenhuma Prova',v:sP,c:'var(--red)',s:tA>0?((sP/tA)*100).toFixed(0)+'% dos ativos':''},
